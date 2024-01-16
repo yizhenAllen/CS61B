@@ -27,6 +27,11 @@ public class Model extends Observable {
      */
     private boolean gameOver;
 
+    /**
+     * The move direction
+     */
+    private Side side;
+
     /* Coordinate System: column C, row R of the board (where row 0,
      * column 0 is the lower-left corner of the board) will correspond
      * to board.tile(c, r).  Be careful! It works like (x, y) coordinates.
@@ -36,6 +41,7 @@ public class Model extends Observable {
      * Largest piece value.
      */
     public static final int MAX_PIECE = 2048;
+
 
     /**
      * A new 2048 game on a board of size SIZE with no pieces
@@ -140,10 +146,27 @@ public class Model extends Observable {
     }
 
     /**
+     * return the row of a specific tile after a board is rotated
+     */
+    public int getRowAfterRotate(Tile t) {
+        int originalCol = t.col();
+        int originalRow = t.row();
+        if (side == Side.NORTH) {
+            return originalRow;
+        } else if (side == Side.SOUTH) {
+            return 3 - originalRow;
+        } else if (side == Side.WEST) {
+            return 3 - originalCol;
+        } else {
+            return originalCol;
+        }
+    }
+
+    /**
      * 输入tile和firstNotNull的row(要求row < board.size()), 将tile移动到row下面一个
      */
     public boolean moveToRightAfterTheRow(int c, int r, Tile t) {
-        if (r == t.row() + 1) {
+        if (r - 1 == getRowAfterRotate(t)) {
             return false;
         } else {
             board.move(c, r - 1, t);
@@ -209,6 +232,7 @@ public class Model extends Observable {
      */
     public boolean tilt(Side side) {
         boolean changed;
+        this.side = side;
         board.setViewingPerspective(side);
         changed = allColMoveUp();
         board.setViewingPerspective(Side.NORTH);
