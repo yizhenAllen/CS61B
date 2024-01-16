@@ -23,7 +23,7 @@ public class Model extends Observable {
      */
     private int maxScore;
     /**
-     * True iff game is ended.
+     * True if game is ended.
      */
     private boolean gameOver;
 
@@ -124,6 +124,77 @@ public class Model extends Observable {
     }
 
     /**
+     * find first upper tile that is not null
+     *
+     * @param r is the row of tile you want to focus on
+     * @return return the row of the first upper tile that is not null,
+     * if all the upper tiles are null, return board.size()
+     */
+    public int findFirstNotNullUpperTile(int c, int r) {
+        for (int row = r + 1; row < board.size(); row++) {
+            if (board.tile(c, row) != null) {
+                return row;
+            }
+        }
+        return board.size();
+    }
+
+    /**
+     * 输入tile和firstNotNull的row(要求row < board.size()), 将tile移动到row下面一个
+     */
+    public boolean moveToRightAfterTheRow(int c, int r, Tile t) {
+        if (r == t.row() + 1) {
+            return false;
+        } else {
+            board.move(c, r - 1, t);
+            return true;
+        }
+    }
+
+    /**
+     * 处理一列中, 向上tilt的逻辑
+     */
+    public boolean oneColMoveUp(int col) {
+        boolean changed = false;
+        boolean merged = false;
+        for (int row = board.size() - 2; row >= 0; row--) {
+            Tile t = board.tile(col, row);
+            if (t != null) {
+                int firstNotNullRow = findFirstNotNullUpperTile(col, row);
+                if (firstNotNullRow == board.size()) {
+                    changed = moveToRightAfterTheRow(col, firstNotNullRow, t);
+                } else if (merged) {
+                    changed = moveToRightAfterTheRow(col, firstNotNullRow, t);
+                    merged = false;
+                } else if (board.tile(col, firstNotNullRow).value() == t.value()) {
+                    score += 2 * t.value();
+                    board.move(col, firstNotNullRow, t);
+                    merged = true;
+                    changed = true;
+                } else {
+                    changed = moveToRightAfterTheRow(col, firstNotNullRow, t);
+                }
+            }
+        }
+        return changed;
+    }
+
+    /**
+     * operation after pressing up
+     */
+    public boolean allColMoveUp() {
+        boolean changed = false;
+        for (int col = 0; col < board.size(); col++) {
+            boolean change = oneColMoveUp(col);
+            if (change) {
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+
+    /**
      * Tilt the board toward SIDE. Return true iff this changes the board.
      * <p>
      * 1. If two Tile objects are adjacent in the direction of motion and have
@@ -138,15 +209,13 @@ public class Model extends Observable {
      */
     public boolean tilt(Side side) {
         boolean changed;
-        changed = false;
+        board.setViewingPerspective(side);
+        changed = allColMoveUp();
+        board.setViewingPerspective(Side.NORTH);
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
-
-        checkGameOver();
+        checkGameOver(); //如果move之后游戏结束, 将gameOver变量置为true
         if (changed) {
-            setChanged();
+            setChanged(); //将另外的实例changed变量置为true
         }
         return changed;
     }
@@ -187,7 +256,6 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-//        System.out.println(b.tile(0, 0).value());
         for (int col = 0; col < b.size(); col++) {
             for (int row = 0; row < b.size(); row++) {
                 if (b.tile(col, row) != null && b.tile(col, row).value() == MAX_PIECE) {
@@ -205,13 +273,32 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (Model.emptySpaceExists(b)) {
+            return true;
+        }
+        // 在上下方向是否存在相邻方块, 它们的数相同
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size() - 1; row++) {
+                if (b.tile(col, row).value() == b.tile(col, row + 1).value()) {
+                    return true;
+                }
+            }
+        }
+        // 在左右方向是否存在相邻方块, 它们的数相同
+        for (int col = 0; col < b.size() - 1; col++) {
+            for (int row = 0; row < b.size() - 1; row++) {
+                if (b.tile(col, row).value() == b.tile(col + 1, row).value()) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-
+    /**
+     * Returns the model as a string, used for debugging.
+     */
     @Override
-    /** Returns the model as a string, used for debugging. */
     public String toString() {
         Formatter out = new Formatter();
         out.format("%n[%n");
@@ -230,8 +317,10 @@ public class Model extends Observable {
         return out.toString();
     }
 
+    /**
+     * Returns whether two models are equal.
+     */
     @Override
-    /** Returns whether two models are equal. */
     public boolean equals(Object o) {
         if (o == null) {
             return false;
@@ -242,8 +331,10 @@ public class Model extends Observable {
         }
     }
 
+    /**
+     * Returns hash code of Model’s string.
+     */
     @Override
-    /** Returns hash code of Model’s string. */
     public int hashCode() {
         return toString().hashCode();
     }
