@@ -310,7 +310,7 @@ public class Model extends Observable {
         }
         // 在左右方向是否存在相邻方块, 它们的数相同
         for (int col = 0; col < b.size() - 1; col++) {
-            for (int row = 0; row < b.size() - 1; row++) {
+            for (int row = 0; row < b.size(); row++) {
                 if (b.tile(col, row).value() == b.tile(col + 1, row).value()) {
                     return true;
                 }
