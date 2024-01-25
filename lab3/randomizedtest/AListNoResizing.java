@@ -1,7 +1,7 @@
 package randomizedtest;
 
 /** Array based list.
- *  @author Josh Hug
+ *  @author yizhenAllen
  */
 
 //         0 1  2 3 4 5 6 7
