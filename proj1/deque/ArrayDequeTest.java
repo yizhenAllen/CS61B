@@ -8,16 +8,14 @@ import static org.junit.Assert.*;
 /**
  * Performs some basic linked list tests.
  */
-public class LinkedListDequeTest {
-
+public class ArrayDequeTest {
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,
      * finally printing the results.
      *
-     * && is the "and" operation. */
-    public void addIsEmptySizeTest() {
+     * && is the "and" operation. */ public void addIsEmptySizeTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
@@ -38,9 +36,8 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
-    public void addRemoveTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+    /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */ public void addRemoveTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         // should be empty
         assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -54,10 +51,9 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Tests removing from an empty deque */
-    public void removeEmptyTest() {
+    /* Tests removing from an empty deque */ public void removeEmptyTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -74,12 +70,11 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Check if you can create LinkedListDeques with different parameterized types*/
-    public void multipleParamTest() {
+    /* Check if you can create LinkedListDeques with different parameterized types*/ public void multipleParamTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
-        LinkedListDeque<Double> lld2 = new LinkedListDeque<Double>();
-        LinkedListDeque<Boolean> lld3 = new LinkedListDeque<Boolean>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<Double>();
+        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -91,10 +86,9 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty LinkedListDeque. */
-    public void emptyNullReturnTest() {
+    /* check if null is return when removing from an empty LinkedListDeque. */ public void emptyNullReturnTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
         boolean passed1 = false;
         boolean passed2 = false;
@@ -103,10 +97,9 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Add large number of elements to deque; check if order is correct. */
-    public void bigLLDequeTest() {
+    /* Add large number of elements to deque; check if order is correct. */ public void bigLLDequeTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 1000000; i++) {
             lld1.addLast(i);
         }
@@ -121,9 +114,8 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* check if get and getRecursive methods work properly */
-    public void testGetItems() {
-        LinkedListDeque<Integer> lld = new LinkedListDeque<Integer>();
+    /* check if get methods work properly */ public void testGetItems() {
+        ArrayDeque<Integer> lld = new ArrayDeque<Integer>();
         lld.addLast(4);
         lld.addFirst(3);
         lld.addLast(5);
@@ -133,14 +125,16 @@ public class LinkedListDequeTest {
         lld.addLast(7);
         lld.addFirst(0);
         lld.addLast(8);
+        lld.addFirst(-1);
+        lld.addLast(9);
         lld.printDeque();
         System.out.print(lld.get(0) + " ");
-        System.out.print(lld.getRecursive(1) + " ");
+        System.out.print(lld.get(1) + " ");
         System.out.print(lld.get(2) + " ");
-        System.out.print(lld.getRecursive(3) + " ");
+        System.out.print(lld.get(3) + " ");
         System.out.print(lld.get(4) + " ");
-        System.out.print(lld.getRecursive(5) + " ");
-        System.out.print(lld.getRecursive(6) + " ");
+        System.out.print(lld.get(5) + " ");
+        System.out.print(lld.get(6) + " ");
         System.out.print(lld.get(7) + " ");
         System.out.print(lld.get(8) + " ");
     }
