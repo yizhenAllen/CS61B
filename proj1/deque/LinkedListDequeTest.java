@@ -123,7 +123,11 @@ public class LinkedListDequeTest {
     @Test
     /* check if get and getRecursive methods work properly */
     public void testGetItems() {
-        LinkedListDeque<Integer> lld = new LinkedListDeque<Integer>();
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+        for (int i = 0; i < 9; i++) {
+            lld2.addLast(i);
+        }
         lld.addLast(4);
         lld.addFirst(3);
         lld.addLast(5);
@@ -134,6 +138,17 @@ public class LinkedListDequeTest {
         lld.addFirst(0);
         lld.addLast(8);
         lld.printDeque();
+        System.out.println("-----------------------------");
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeFirst();
+        lld.printDeque();
+        System.out.println("-----------------------------");
+        lld.removeFirst();
+        lld.printDeque();
+        System.out.println("-----------------------------");
         System.out.print(lld.get(0) + " ");
         System.out.print(lld.getRecursive(1) + " ");
         System.out.print(lld.get(2) + " ");
@@ -143,5 +158,17 @@ public class LinkedListDequeTest {
         System.out.print(lld.getRecursive(6) + " ");
         System.out.print(lld.get(7) + " ");
         System.out.print(lld.get(8) + " ");
+        System.out.println("\n-----------------------------");
+
+
+        System.out.println(lld.equals(lld2));
+        lld2.removeFirst();
+        lld2.removeLast();
+        lld2.removeFirst();
+        lld2.removeLast();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        System.out.println(lld.equals(lld2));
+        System.out.println(lld2.equals(lld));
     }
 }

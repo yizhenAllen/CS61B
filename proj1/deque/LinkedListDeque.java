@@ -1,15 +1,17 @@
 package deque;
 
-public class LinkedListDeque<T> {
+import java.util.*;
+
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private static class Node<T> {
         T item;
         Node<T> prev;
         Node<T> next;
 
-        public Node() {
+        Node() {
         }
 
-        public Node(T i, Node<T> p, Node<T> n) {
+        Node(T i, Node<T> p, Node<T> n) {
             item = i;
             prev = p;
             next = n;
@@ -31,6 +33,34 @@ public class LinkedListDeque<T> {
         this.size = size;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return DequeUtil.equals(this, o);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LLDequeIterator();
+    }
+
+    private class LLDequeIterator implements Iterator<T> {
+        Node<T> cur = sentinel;
+
+        @Override
+        public boolean hasNext() {
+            return (cur.next != sentinel);
+        }
+
+        @Override
+        public T next() {
+            cur = cur.next;
+            return cur.item;
+        }
+
+    }
+
+    @Override
+
     public void addFirst(T item) {
         Node<T> first;
         first = sentinel.next = new Node<>(item, sentinel, sentinel.next);
@@ -38,6 +68,7 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
+    @Override
     public void addLast(T item) {
         Node<T> last;
         last = sentinel.prev = new Node<>(item, sentinel.prev, sentinel);
@@ -45,23 +76,21 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-    public boolean isEmpty() {
-        return (size == 0);
-    }
 
+    @Override
     public void printDeque() {
-        Node<T> cur = sentinel.next;
-        while (cur != sentinel) {
-            System.out.print(cur.item + " ");
-            cur = cur.next;
+        for (T item : this) {
+            System.out.print(item + " ");
         }
         System.out.println();
     }
 
+    @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
@@ -86,6 +115,7 @@ public class LinkedListDeque<T> {
         }
     }
 
+    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -98,6 +128,7 @@ public class LinkedListDeque<T> {
         }
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;

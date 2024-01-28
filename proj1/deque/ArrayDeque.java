@@ -1,17 +1,17 @@
 package deque;
 
-public class ArrayDeque<T> {
-    T[] array;
-    int size;
-    int nextFirst, nextLast;
-    double usage;
+import java.util.*;
+
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
+    private T[] array;
+    private int size;
+    private int nextFirst, nextLast;
 
     public ArrayDeque() {
         array = (T[]) new Object[8];
         size = 0;
         nextFirst = 0;
         nextLast = 1;
-        usage = size / (double) array.length;
     }
 
     private int circleNext(int toBePlus, int len) {
@@ -31,63 +31,97 @@ public class ArrayDeque<T> {
     }
 
     private void expend() {
-        nextFirst += array.length;
-        usage = 0.5;
-        T[] newArray = (T[]) new Object[array.length * 2];
-        for (int i = circleNext(nextFirst, 2 * array.length); i != nextLast; i = circleNext(i, 2 * array.length)) {
-            int tmp = (i - array.length) % array.length;
-            int oldIndex = tmp < 0 ? tmp + array.length : tmp;
-            newArray[i] = array[oldIndex];
+        int len = array.length;
+        T[] newArray = (T[]) new Object[len * 2];
+        for (int i = 1; i <= size; i++) {
+            newArray[i] = array[circleNext(nextFirst, len)];
+            nextFirst = circleNext(nextFirst, len);
         }
+        nextFirst = 0;
+        nextLast = size + 1;
         array = newArray;
     }
 
     private void contract() {
         if (array.length >= 16) {
-            //TODO
+            int len = array.length;
             int targetLen = array.length / 2;
-            usage = size / (double) targetLen;
-//        nextFirst -=; nextLast -=; T[] newArray = (T[]) new Object[targetLen];
+            T[] newArray = (T[]) new Object[targetLen];
+            for (int i = 1; i <= size; i++) {
+                newArray[i] = array[circleNext(nextFirst, len)];
+                nextFirst = circleNext(nextFirst, len);
+            }
+            nextFirst = 0;
+            nextLast = size + 1;
+            array = newArray;
         }
     }
 
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+            private int cur = circleNext(nextFirst, array.length);
+            private boolean first = true;
+
+            @Override
+            public boolean hasNext() {
+                if (size != array.length) {
+                    return cur != nextLast;
+                } else {
+                    return (cur != nextLast) || first;
+                }
+            }
+
+            @Override
+            public T next() {
+                T item = array[cur];
+                cur = circleNext(cur, array.length);
+                first = false;
+                return item;
+            }
+        };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return DequeUtil.equals(this, o);
+    }
+
+    @Override
     public void addFirst(T item) {
         if (size == array.length) {
             expend();
         }
         array[nextFirst] = item;
         size += 1;
-        usage = size / (double) array.length;
         nextFirst = circlePrev(nextFirst, array.length);
     }
 
+    @Override
     public void addLast(T item) {
         if (size == array.length) {
             expend();
         }
         array[nextLast] = item;
         size += 1;
-        usage = size / (double) array.length;
         nextLast = circleNext(nextLast, array.length);
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-    public boolean isEmpty() {
-        return (size == 0);
-    }
-
+    @Override
     public void printDeque() {
-        if (size > 0) {
-            for (int i = circleNext(nextFirst, array.length); i != nextLast; i = circleNext(i, array.length)) {
-                System.out.print(array[i] + " ");
-            }
-            System.out.println();
+        for (T item : this) {
+            System.out.print(item + " ");
         }
+        System.out.println();
     }
 
+    @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
@@ -97,6 +131,7 @@ public class ArrayDeque<T> {
         }
     }
 
+    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -106,11 +141,11 @@ public class ArrayDeque<T> {
         T result = array[circleNext(nextFirst, array.length)];
         array[circleNext(nextFirst, array.length)] = null;
         size -= 1;
-        usage = size / (double) array.length;
         nextFirst = circleNext(nextFirst, array.length);
         return result;
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -120,7 +155,6 @@ public class ArrayDeque<T> {
         T result = array[circlePrev(nextLast, array.length)];
         array[circlePrev(nextLast, array.length)] = null;
         size -= 1;
-        usage = size / (double) array.length;
         nextLast = circlePrev(nextLast, array.length);
         return result;
     }

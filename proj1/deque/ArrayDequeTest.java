@@ -115,7 +115,11 @@ public class ArrayDequeTest {
 
     @Test
     /* check if get methods work properly */ public void testGetItems() {
-        ArrayDeque<Integer> lld = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        for (int i = 0; i < 9; i++) {
+            lld2.addLast(i);
+        }
         lld.addLast(4);
         lld.addFirst(3);
         lld.addLast(5);
@@ -124,10 +128,21 @@ public class ArrayDequeTest {
         lld.addFirst(1);
         lld.addLast(7);
         lld.addFirst(0);
-        lld.addLast(8);
-        lld.addFirst(-1);
-        lld.addLast(9);
         lld.printDeque();
+        System.out.println("-----------------------------");
+        lld.addLast(8);
+        lld.printDeque();
+        System.out.println("-----------------------------");
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeFirst();
+        lld.printDeque();
+        System.out.println("-----------------------------");
+        lld.removeFirst();
+        lld.printDeque();
+        System.out.println("-----------------------------");
         System.out.print(lld.get(0) + " ");
         System.out.print(lld.get(1) + " ");
         System.out.print(lld.get(2) + " ");
@@ -137,5 +152,44 @@ public class ArrayDequeTest {
         System.out.print(lld.get(6) + " ");
         System.out.print(lld.get(7) + " ");
         System.out.print(lld.get(8) + " ");
+        System.out.println("\n-----------------------------");
+
+        System.out.println(lld.equals(lld2));
+        lld2.removeFirst();
+        lld2.removeLast();
+        lld2.removeFirst();
+        lld2.removeLast();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        System.out.println(lld.equals(lld2));
+        System.out.println(lld2.equals(lld));
     }
+
+    @Test
+    public void autoGrader() {
+        ArrayDeque<Integer> lld = new ArrayDeque<>();
+        lld.addLast(0);
+        lld.addLast(1);
+        lld.addLast(2);
+        lld.addLast(4);
+        lld.addLast(6);
+        lld.removeFirst();
+        lld.removeLast();
+        lld.addFirst(9);
+        lld.addLast(11);
+        lld.addLast(12);
+        lld.addFirst(13);
+        lld.addLast(14);
+        lld.addFirst(15);
+        lld.addLast(16);
+        lld.removeLast();
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeLast();
+        lld.removeFirst();
+        lld.removeLast();
+        lld.removeFirst();
+        System.out.println(lld.get(2));
+    }
+
 }
