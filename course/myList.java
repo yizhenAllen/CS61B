@@ -1,18 +1,18 @@
-public interface List<Test> {
+public interface myList<T> {
     /**
      * Inserts X into the back of the list.
      */
-    void addLast(Test x);
+    void addLast(T x);
 
     /**
      * Returns the item from the back of the list.
      */
-    Test getLast();
+    T getLast();
 
     /**
      * Gets the ith item in the list (0 is the front).
      */
-    Test get(int i);
+    T get(int i);
 
     /**
      * Returns the number of items in the list.
@@ -23,5 +23,12 @@ public interface List<Test> {
      * Deletes item from back of the list and
      * returns deleted item.
      */
-    Test removeLast();
+    T removeLast();
+
+    default void print() {
+        for (int i = 0; i < size(); i++) {
+            System.out.print(this.get(i) + " ");
+        }
+        System.out.println();
+    }
 }

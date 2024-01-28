@@ -1,9 +1,9 @@
-public class SLList {
-    public static class IntNode {
-        public int item;
-        public IntNode next;
+public class SLList<T> {
+    public static class IntNode<T> {
+        public T item;
+        public IntNode<T> next;
 
-        public IntNode(int i, IntNode n) {
+        public IntNode(T i, IntNode<T> n) {
             item = i;
             next = n;
         }
@@ -11,55 +11,85 @@ public class SLList {
 
     private int size;
     /**
-     * The first item(if it exits) is at sentinal.next
+     * The first item(if it exits) is at sentinel.next
      */
-    private IntNode sentinal;
+    private final IntNode<T> sentinel;
 
-    public SLList(int x) {
-        sentinal = new IntNode(0, new IntNode(x, null));
+    public SLList(T x) {
+        sentinel = new IntNode<>(null, new IntNode<>(x, null));
         size = 1;
     }
 
+    private SLList(IntNode<T> s) {
+        sentinel = s;
+        size = 0;
+    }
+
     public SLList() {
-        sentinal = new IntNode(0, null);
+        sentinel = new IntNode<>(null, null);
         size = 0;
     }
 
     /**
      * Adds an item to the front of the list.
      */
-    public void addFirst(int x) {
-        sentinal.next = new IntNode(x, sentinal.next);
+    public void addFirst(T x) {
+        sentinel.next = new IntNode<>(x, sentinel.next);
         size += 1;
     }
 
     /**
      * Retrieves the front item from the list.
      */
-    public int getFirst() {
-        return sentinal.next.item;
+    public T getFirst() {
+        return sentinel.next.item;
     }
 
     /**
      * Adds an item to the end of the list.
      */
-    public void addLast(int x) {
-        IntNode cur = sentinal;
+    public void addLast(T x) {
+        IntNode<T> cur = sentinel;
         while (cur.next != null) {
             cur = cur.next;
         }
-        cur.next = new IntNode(x, null);
+        cur.next = new IntNode<>(x, null);
         size += 1;
+    }
+    /**
+     * Remove an item at the end of the list.
+     */
+    public T removeLast() {
+        if (size < 1) {
+            return null;
+        }
+        IntNode<T> cur = sentinel;
+        while (cur.next.next != null) {
+            cur = cur.next;
+        }
+        T removeItem = cur.next.item;
+        cur.next = null;
+        size -= 1;
+        return removeItem;
     }
 
     /**
      * Returns the number of items in the list using recursion.
      */
-    private static int size(IntNode p) {
-        if (p.next == null) {
-            return 1;
+    public int sizeRecursive() {
+        if (sentinel.next == null) {
+            return 0;
         } else {
-            return 1 + size(p.next);
+            SLList<T> nextList = new SLList<>(sentinel.next);
+            return 1 + nextList.sizeRecursive();
+        }
+    }
+
+    public void print() {
+        IntNode<T> cur = sentinel.next;
+        while (cur != null) {
+            System.out.println(cur.item + " ");
+            cur = cur.next;
         }
     }
 

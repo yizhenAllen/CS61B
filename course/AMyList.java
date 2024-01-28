@@ -4,25 +4,28 @@
  * @author yizhen Zeng
  */
 
-public class AList<Test> implements List<Test> {
-    public Test[] array;
+public class AMyList<T> implements myList<T> {
+    public T[] array;
     public int size;
 
     /**
      * Creates an empty list.
      */
-    public AList() {
-        array = (Test[]) new Object[100];
+    public AMyList() {
+        array = (T[]) new Object[100];
         size = 0;
+        SLList<Integer>[] tmp = (SLList<Integer>[]) new Object[100];
+        tmp[0] = new SLList<>(1);
+        System.out.println(tmp[0].getFirst());
     }
 
     /**
      * Inserts X into the back of the list.
      */
     @Override
-    public void addLast(Test x) {
+    public void addLast(T x) {
         if (size == array.length) {
-            Test[] newArray = (Test[]) new Object[size * 2];
+            T[] newArray = (T[]) new Object[size * 2];
             System.arraycopy(array, 0, newArray, 0, size);
             newArray[size] = x;
             array = newArray;
@@ -36,7 +39,7 @@ public class AList<Test> implements List<Test> {
      * Returns the item from the back of the list.
      */
     @Override
-    public Test getLast() {
+    public T getLast() {
         return array[size - 1];
     }
 
@@ -44,7 +47,7 @@ public class AList<Test> implements List<Test> {
      * Gets the ith item in the list (0 is the front).
      */
     @Override
-    public Test get(int i) {
+    public T get(int i) {
         return array[i];
     }
 
@@ -61,8 +64,8 @@ public class AList<Test> implements List<Test> {
      * returns deleted item.
      */
     @Override
-    public Test removeLast() {
-        Test last = array[size - 1];
+    public T removeLast() {
+        T last = array[size - 1];
         array[size - 1] = null;
         size -= 1;
         return last;
