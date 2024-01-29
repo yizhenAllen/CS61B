@@ -43,7 +43,7 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         }
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         Comparator<Integer> c = new Comparator<>() {
             @Override
             public int compare(Integer a, Integer b) {
