@@ -1,14 +1,14 @@
 package deque;
 
 public class DequeUtil {
-    public static <T> boolean equals(Deque<T> deque, Object o) {
+    public static boolean equals(Deque<?> deque, Object o) {
         if (o == deque) {
             return true;
         }
-        if (!(o instanceof Deque)) {
+        if (!(o instanceof Deque<?>)) {
             return false;
         }
-        Deque<T> newO = (Deque<T>) o;
+        Deque<?> newO = (Deque<?>) o;
         if (deque.size() != newO.size()) {
             return false;
         }
